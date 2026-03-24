@@ -17,7 +17,7 @@ public class SimuladorBanco2 {
             System.out.println("3. Salir");
 
             int opcion = sc.nextInt();
-            sc.nextLine(); // limpiar buffer
+            sc.nextLine(); 
 
             switch (opcion) {
                 case 1:
