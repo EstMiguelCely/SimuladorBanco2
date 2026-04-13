@@ -5,29 +5,32 @@ import com.murcia.utils.*;
 
 public class SimuladorBanco2 {
 
+
+    private static final Input input = new Input();
+
     public static void main(String[] args) {
 
         Banco banco = new Banco();
 
-        Menu menuPrincipal;
-        menuPrincipal = new Menu(
+
+        Menu menuPrincipal = new Menu(
                 new String[]{
-                    "\nCrear nuevo cliente\n",
-                    "\nEliminar cliente de la fila\n",
-                    "\nAtender siguiente cliente\n",
-                    "\nVer fila de espera\n",
-                    "\nVer historial de atendidos\n",
-                    "\nVer todos los clientes registrados\n",
-                    "\nSalir\n"
+                    "1 Crear nuevo cliente",
+                    "2 Eliminar cliente de la fila",
+                    "3 Atender siguiente cliente",
+                    "4 Ver fila de espera",
+                    "5 Ver historial de atendidos",
+                    "6 Ver todos los clientes registrados",
+                    "7 Salir"
                 },
                 '1',
-                "─────────────────────────",
+                "-------------------------",
                 "=== BANCO NACIONAL ==="
         );
 
         boolean salir = false;
         while (!salir) {
-            char op = menuPrincipal.select("\nSeleccione una opcion: \n");
+            char op = menuPrincipal.select("Seleccione una opcion: ");
             switch (op) {
                 case '1': crearCliente(banco);              break;
                 case '2': eliminarDeFila(banco);            break;
@@ -50,11 +53,9 @@ public class SimuladorBanco2 {
 
     // =============================================================
     //  CREAR cliente
-    //  Internamente: ColaEnlazada.encolar() + ListaEnlazada.add()
+    
     // =============================================================
     private static void crearCliente(Banco banco) {
-        Input input = new Input();
-
         // nextInt(msg, low, high) valida rango automáticamente
         int cuenta   = input.nextInt("Numero de cuenta (1-99999): ", 1, 99999);
         float saldo  = input.nextFloat("Saldo inicial ($): ");
@@ -69,8 +70,6 @@ public class SimuladorBanco2 {
 
     // =============================================================
     //  ELIMINAR cliente de la fila por número de turno
-    //  Internamente: reconstrucción de ColaEnlazada
-    //                + ListaEnlazada.remove(i)
     // =============================================================
     private static void eliminarDeFila(Banco banco) {
         if (banco.filaVacia()) {
@@ -80,7 +79,6 @@ public class SimuladorBanco2 {
 
         System.out.println("\nFila actual:\n" + banco.resumenFila());
 
-        Input input = new Input();
         int turno = input.nextInt("Ingrese el numero de turno a eliminar: ", 1, 99999);
 
         // Confirmar con nextChar (s/n)
@@ -101,8 +99,8 @@ public class SimuladorBanco2 {
     }
 
     // =============================================================
-    //  ATENDER cliente (desencolar + operaciones)
-    // =============================================================
+    //  ATENDER cliente desencolar 
+    
     private static void atenderCliente(Banco banco) {
         Cliente cliente = banco.atenderSiguiente();
 
@@ -114,13 +112,16 @@ public class SimuladorBanco2 {
         System.out.println("\nAtendiendo → Turno " + cliente.getTurno() +
                            "  |  Cuenta: " + cliente.getNombre());
 
-        Input input = new Input();
-
         Menu menuOp = new Menu(
-            new String[]{"Consultar saldo", "Depositar", "Retirar",
-                         "Eliminar del historial", "Finalizar atencion"},
+            new String[]{
+                "1 Consultar saldo",
+                "2 Depositar",
+                "3 Retirar",
+                "4 Eliminar del historial",
+                "5 Finalizar atencion"
+            },
             '1',
-            "─────────────────────────",
+            "-------------------------",
             "--- Operaciones ---"
         );
 
@@ -148,7 +149,7 @@ public class SimuladorBanco2 {
                             String.format("%.2f", cliente.getSaldo()));
                     break;
                 case '4':
-                    // Eliminar del historial: ListaEnlazada.remove(i)
+                    // Eliminar del historial
                     char conf = input.nextChar("Eliminar este cliente del historial? (s/n): ");
                     if (conf == 's' || conf == 'S') {
                         banco.eliminarClienteDeHistorial(cliente.getTurno());
@@ -165,3 +166,4 @@ public class SimuladorBanco2 {
         System.out.println("Gracias por su visita. Hasta pronto.");
     }
 }
+
